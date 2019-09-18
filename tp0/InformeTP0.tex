@@ -57,7 +57,7 @@
 % \newpage
 % Es un breve resumen de lo que vamos a leer con mayor profundidad en las secciones posteriores, tiene que resaltar lo más importante.
 \begin{abstract}
-El presente trabajo práctico nos permitió analizar la performance de un programa a partir de la implementación de una mejora sobre un módulo. Para su análisis se usaron herramientas de análisis de tiempos de ejecución y perfilado (\textbf{time  y gprof respectivamente}). Además se aplicaron los conocimientos adquiridos sobre la Ley de Amdahl para el cálculo del SpeedUp.
+El presente trabajo práctico nos permitió analizar la performance de un programa a partir de la implementación de una mejora sobre un módulo. Para su análisis se usaron herramientas de análisis de tiempos de ejecución y perfilado (\textbf{time y gprof respectivamente}). Además, se aplicaron los conocimientos adquiridos sobre la Ley de Amdahl para el cálculo del SpeedUp.
 \end{abstract}
 
 % \tableofcontents
@@ -84,9 +84,9 @@ El presente trabajo práctico nos permitió analizar la performance de un progra
 \parskip 7.2pt
 %Distinto al resumen, se dice cual es el objetivo principal y se hace un resumen de cada parte que aparece a continuación. 
 \section{Introducción}
-A continuación se realizarán distintos procedimientos con motivo de  analizar el rendimiento de al menos dos implementaciones del algoritmo que llamamos "La hormiga artista". El análisis será llevado a cabo sobre un ambiente MIPS usando herramientas time y gprof del entorno de trabajo y la Ley de Amdahl.\\
+A continuación, se realizarán distintos procedimientos con motivo de analizar el rendimiento de al menos dos implementaciones del algoritmo que llamamos "La hormiga artista". El análisis será llevado a cabo sobre un ambiente MIPS usando las herramientas time y gprof del entorno de trabajo y la Ley de Amdahl.\\
 
-La ley de Amdahl mide cuanto mejora o empeora un sistema al introducir mejoras en un sistema existente dependiendo de la frecuencia de utilización del elemento modificado.\\
+La ley de Amdahl mide cuánto mejora o empeora un sistema al introducir mejoras en un sistema existente dependiendo de la frecuencia de utilización del elemento modificado.\\
 
 \begin{equation}
  SpeedUp =\frac{1}{(1-Fm) + \frac{Fm}{Am}}
@@ -104,7 +104,7 @@ Donde:\\
 
 \section{Proceso de Compilación}
 
-Se usó el archivo makefile provisto por la cátedra para generar los ejecutables tanto para crear los perfiles como así para conocer los tiempos de ejecución.\\
+Se usó el archivo makefile provisto por la cátedra para generar los ejecutables tanto para crear los perfiles como también para conocer los tiempos de ejecución.\\
 
 \begin{itemize} 
 \item[] \textbf{make all}: Crea dos ejecutables tp0\_if y tp0\_tables.
@@ -113,7 +113,7 @@ Se usó el archivo makefile provisto por la cátedra para generar los ejecutable
 
 Los dos primeros archivos fueron usados para medir los tiempos de ejecución usando la herramienta \textbf{time}, mientras que los subsiguientes para el perfilamiento usando la herramienta \textbf{gprof}.
 
-Como primer paso ejecutamos las versión compilada para conocer el perfilado:
+Como primer paso ejecutamos las versiones compiladas con sufijo \textbf{pf} para conocer el perfilado:
 \scriptsize
 \begin{verbatim}
 #  ./tp0_tables_pf -g 10000x10000 -p RGBW -r LLLL -t $((1000 * 1000)) > /dev/null
@@ -128,7 +128,7 @@ Una vez terminada la ejecución, usamos el siguiente comando para conocer el per
 \end{verbatim}
 \normalsize
 
-A continuación se muestran los resultados de perfilado plano para este caso de prueba donde se muestran en forma decreciente tomando el cuenta el porcentaje de tiempo total del programa que se dedicó a una función. Estos reportes muestran el tiempo de ejecución y la cantidad de llamadas. 
+A continuación se muestran los resultados de perfilado plano para este caso de prueba presentados en orden decreciente tomando el cuenta el porcentaje de tiempo total del programa que se dedicó a una función. Estos reportes muestran el tiempo de ejecución y la cantidad de llamadas. 
 \scriptsize
 \begin{verbatim}
 Each sample counts as 0.01 seconds.
@@ -251,7 +251,7 @@ index % time    self  children    called     name
 
 \newpage
 \section{Desarrollo}
-En primer lugar nos plantemos la necesidad de probar muchas ejecuciones modificando los parámetros del programa. Se realizaron 10 ejecuciones con los mismos parámetros para sacar una media del tiempo de ejecución.
+En primer lugar nos planteamos la necesidad de probar muchas ejecuciones modificando los parámetros del programa. Se realizaron 10 ejecuciones con los mismos parámetros para sacar una media del tiempo de ejecución.
 
 Para el caso del programa en la versión \textbf{tp0\_if} y con el parámetro cantidad de iteraciones en 200 millones se obtuvieron los siguientes resultados:
 
@@ -430,9 +430,9 @@ Luego de esto, usamos la herramienta de perfilado \textbf{gprof} cuyos resultado
 
 \end{verbatim}
 \normalsize
-De estos resultados se puede apreciar que, para un número de iteraciones grande(200 millones) el porcentaje de tiempo consumido por la función \textbf{paint} es medianamente constante. Hay un incremento de tiempo de ejecución debido al mayor uso de memoria ya que al usar la función \textbf{calloc()} aparte de reservar un bloque de memoria, las inicializa lo que genera un mayor tiempo de ejecución.\\
+De estos resultados se puede apreciar que, para un número de iteraciones grande(200 millones) el porcentaje de tiempo consumido por la función \textbf{paint} es medianamente constante. Hay un incremento de tiempo de ejecución debido al mayor uso de memoria ya que al usar la función \textbf{calloc()}, aparte de reservar un bloque de memoria, lo inicializa. Esto trae como consecuencia un mayor tiempo de ejecución.\\
 \\
-Además se realizaron las mismas cantidades de pruebas pero esta vez con un valor de grilla constante de \textbf{1000x1000} y aumentando la cantidad de iteraciones:
+Además, se realizaron las mismas cantidades de pruebas pero esta vez con un valor de grilla constante de \textbf{1000x1000} y aumentando la cantidad de iteraciones:
 
 \textbf{Versión tp0\_if\_pf}:
 
@@ -628,9 +628,9 @@ index % time    self  children    called     name
 \end{verbatim}
 \normalsize
 
-Donde \textbf{index \% time} es el porcentaje total que el programa dedicó a esta función incluidas las llamadas que se hicieron desde esta.\\
+Donde \textbf{index \% time} es el porcentaje total que el programa dedicó a esta función, incluidas las llamadas que se hicieron desde la misma.\\
 
-De estos valores se puede calcular el SpeedUp de la función \textbf{paint} usando la definición de la Ley de Amdahl.\\
+Con estos valores se puede calcular el SpeedUp de la función \textbf{paint} usando la definición de la Ley de Amdahl.\\
 
 Donde:\\
 
@@ -726,9 +726,9 @@ Teniendo en cuenta los seís módulos, el SpeedUp total calculado es de \textbf{
 
 \section{Conclusión}
 
-Si bien se esperaba tener una mejora en los tiempos de ejecución del programa no se lograron grandes mejoras, de hecho el programa en general tuvo una menor performance. Como se puede observar en los reportes para la misma cantidad de grillas e iteraciones(altas), los tiempos con la versión "mejorada" del programa fueron levemente mayores para todos los casos de prueba. Al incrementar la cantidad de grillas se logra un menor performance debido a la función \textbf{xalloc} que además de reservar el bloque de memoria, inicializa el bloque. \\
+Si bien se esperaba tener una mejora en los tiempos de ejecución del programa no se lograron grandes mejoras, de hecho el programa en general tuvo una menor performance. Como se puede observar en los reportes para la misma cantidad de grillas e iteraciones(altas), los tiempos con la versión "mejorada" del programa fueron levemente mayores para todos los casos de prueba. Al incrementar la cantidad de grillas se logra una menor performance debido a la función \textbf{xalloc} que, además de reservar el bloque de memoria, inicializa el bloque. \\
 
-La función \textbf{new\_orientation} mejora debido a que se usa un arreglo en vez de un \textbf{switch...case} que es menos eficiente, caso contrario con la función \textbf{move\_forward} empeora debido a que se reemplaza un \textbf{switch...case} por un arreglo y agrega llamadas a funciones que a su vez estas agregan nuevas llamadas. La función \textbf{rule\_for\_color} presenta una leve mejora debido a que no se realiza una validación\textbf{(if...else)} como en la versión original.
+La función \textbf{new\_orientation} mejora debido a que se usa un arreglo en vez de un \textbf{switch...case} que es menos eficiente, en contraposición con la función \textbf{move\_forward} que empeora debido a que se reemplaza un \textbf{switch...case} por un arreglo y agrega llamadas a funciones que a su vez agregan nuevas llamadas. La función \textbf{rule\_for\_color} presenta una leve mejora debido a que no se realiza una validación\textbf{(if...else)} como en la versión original.
 
 La función \textbf{paint} mejora levemente, de acuerdo a los  cálculos un 2.6\%.
 
