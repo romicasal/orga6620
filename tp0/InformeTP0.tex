@@ -431,7 +431,7 @@ Luego de esto, usamos la herramienta de perfilado \textbf{gprof} cuyos resultado
 
 \end{verbatim}
 \normalsize
-De estos resultados se puede apreciar que, para un número de iteraciones grande(200 millones) el porcentaje de tiempo consumido por la función \textbf{paint} es medianamente constante. Hay un incremento de tiempo de ejecución debido al mayor uso de memoria ya que al usar la función \textbf{calloc()}, aparte de reservar un bloque de memoria, lo inicializa. Esto trae como consecuencia un mayor tiempo de ejecución.\\
+De estos resultados se puede apreciar que, para un número de iteraciones grande(200 millones) el porcentaje de tiempo consumido por la función \textbf{paint} es medianamente constante. Hay un incremento de tiempo de ejecución debido al mayor uso de memoria ya que al usar la función \textbf{xalloc()}, aparte de reservar un bloque de memoria, lo inicializa. Esto trae como consecuencia un mayor tiempo de ejecución.\\
 \\
 Además, se realizaron las mismas cantidades de pruebas pero esta vez con un valor de grilla constante de \textbf{1000x1000} y aumentando la cantidad de iteraciones:
 
