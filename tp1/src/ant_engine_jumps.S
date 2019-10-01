@@ -11,8 +11,7 @@ ime: .asciiz "TP1 2Q2019: Implement me!"
 new_orientation:
 #    la a0, ime
 #    jal doPanic
-
-	#armo stack
+#armo stack
 	subu	$sp, $sp, 24
 	sw	$ra, 16($sp)
 	sw	$fp, 12($sp)
@@ -22,24 +21,51 @@ new_orientation:
 	# guardo parametros
 	sw	$a0, 0($sp)	# orientation
 	sw	$a1, 4($sp)	# rule
-	
 	# cargo parametros en registros
-	# y calculo indice en el array
-    # indice orientation x 4bytes = word	
-	mul	$t0, $a0, 8	                    
-	mul	$t1, $a1, 4
-	add	$t0, $t0, $t1
-	la	$t2, rotation_rules($t0)
-
+	move	$t0, $a0
+	move	$t1, $a1
+	
+	# orientacion?
+	
+norte:	bne	$t0, 0, sur
+	bne	$t1, $zero, norte_derecha	# RL = 0
+	addi	$t2, $zero, 3			# OW = 3
+	j	return_value
+norte_derecha:
+	addi	$t2, $zero, 2			# OE = 2
+	j	return_value
+sur:	bne	$t0, 1, este
+	bne	$t1, $zero, sur_derecha
+	addi	$t2, $zero, 2
+	j	return_value
+sur_derecha:
+	addi	$t2, $zero, 3
+	j	return_value
+este:	bne	$t0, 2, oeste
+	bne	$t1, $zero, este_derecha
+	addi	$t2, $zero, 0			# ON = 0
+	j	return_value
+este_derecha:
+	addi	$t2, $zero, 1			# OS = 1
+	j	return_value
+			
+oeste:	bne	$t1, $zero, oeste_derecha
+	addi	$t2, $zero, 1
+	j	return_value
+oeste_derecha:
+	addi	$t2, $zero, 0
+	
+return_value:
 	# return new orientation
-	lw	$v0, ($t2)
-
+	move	$v0, $t2
+			
 	#borro stack
 	lw	$gp, 8($sp)
 	lw	$fp, 12($sp)
 	lw	$ra, 16($sp)
 	addu	$sp, $sp, 24
 	jr	$ra
+
 
 .end new_orientation
 
