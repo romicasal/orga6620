@@ -1,4 +1,5 @@
 #include <regdef.h>
+#include <ant_constants.h>
 
 .data
 ime: .asciiz "TP1 2Q2019: Implement me!"
@@ -74,6 +75,37 @@ return_value:
 .globl move_forward
 .ent move_forward
 move_forward:
-    la a0, ime
-    jal doPanic
+	#    la a0, ime
+	#   jal doPanic
+	# move_forward(ant_t *ant, uint32_t width, uint32_t height)
+	addiu	$sp, $sp, -8
+	sw		$fp, 4($sp)
+	sw		$gp, 0($sp)
+	# load struct ant_t
+	lw		$t0, 0($a0)		# x
+	lw		$t1, 4($a0)		# y
+	lw		$t2, 8($a0)		# o
+	add		$t3, $a0, 0		# &x
+	add		$t4, $a0, 4		# &y
+	# switch
+	beq		$t2, ON, case_north
+	nop
+	beq		$t2, OS, case_south
+	nop
+	beq		$t2, OE, case_east
+	nop
+	beq		$t2, OW, case_west
+	j done
+case_north:
+
+case_south:
+case_east:
+case_west:
+done:
+	jr $ra
+
+
+
+
+
 .end move_forward
