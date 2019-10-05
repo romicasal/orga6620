@@ -1,6 +1,7 @@
 #include <regdef.h>
 #include <ant_constants.h>
 
+
 .data
 ime: .asciiz "TP1 2Q2019: Implement me!"
 
@@ -77,10 +78,12 @@ return_value:
 move_forward:
 	#    la a0, ime
 	#   jal doPanic
-	# allocate stack frame
-	addiu	$sp, $sp, -8
+	# allocate stack frame(SRA=8 LTA= ABA=0)
+	addi	$sp, $sp, -8
 	sw		$fp, 4($sp)
 	sw		$gp, 0($sp)
+	move 	$fp, $sp
+
 	# load struct ant_t
 	lw		$t0, 0($a0)			# x
 	lw		$t1, 4($a0)			# y
@@ -117,10 +120,8 @@ case_west:
 	sw		$t5, 0($a0)			# &ant->x
 	j		done
 done:
+	lw		$fp, 4($sp)
+	lw		$gp, 0($sp)
+	addiu	$sp, $sp, 8
 	jr $ra
-
-
-
-
-
 .end move_forward
