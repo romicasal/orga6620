@@ -77,30 +77,45 @@ return_value:
 move_forward:
 	#    la a0, ime
 	#   jal doPanic
-	# move_forward(ant_t *ant, uint32_t width, uint32_t height)
+	# allocate stack frame
 	addiu	$sp, $sp, -8
 	sw		$fp, 4($sp)
 	sw		$gp, 0($sp)
 	# load struct ant_t
-	lw		$t0, 0($a0)		# x
-	lw		$t1, 4($a0)		# y
-	lw		$t2, 8($a0)		# o
-	add		$t3, $a0, 0		# &x
-	add		$t4, $a0, 4		# &y
-	# switch
-	beq		$t2, ON, case_north
-	nop
-	beq		$t2, OS, case_south
-	nop
-	beq		$t2, OE, case_east
-	nop
-	beq		$t2, OW, case_west
-	j done
-case_north:
-
+	lw		$t0, 0($a0)			# x
+	lw		$t1, 4($a0)			# y
+	lw		$t2, 8($a0)			# o
+	# switch statement
+	bne		$t2, ON, case_south
+	# adjust(&ant->y, ant->y - 1, height);
+	# adjust(p, v, limit)
+	# *(p) = (v) % (limit);
+	addi	$t1, $t1, -1		# ant->y - 1
+	div		$t1, $a2			# ant->y / heigth
+	mfhi	$t5					# remainder moved into $t5
+	sw		$t5, 4($a0)			# &ant->y
+	j		done
 case_south:
+	bne		$t2, OS, case_east
+	addi	$t1, $t1, 1			# ant->y + 1
+	div		$t1, $a2			# ant->y / height
+	mfhi	$t5					# remainder moved into $t5
+	sw		$t5, 4($a0)			# &ant->y
+	j		done
 case_east:
+	bne		$t2, OE, case west
+	addi	$t0, $t0, 1			# ant->x + 1
+	div		$t0, $a1			# ant->x / width
+	mfhi	$t5					# remainder moved into $t5
+	sw		$t5, 0($a0)			# &ant->x
+	j		done
 case_west:
+	bne		$t2, OW, case_default
+	addi	$t0, $t0, -1		# ant->x + 1
+	div		$t0, $a1			# ant->x / width
+	mfhi	$t5					# remainder moved into $t5
+	sw		$t5, 0($a0)			# &ant->x
+	j		done
 done:
 	jr $ra
 
