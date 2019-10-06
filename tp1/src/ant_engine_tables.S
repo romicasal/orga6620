@@ -1,5 +1,4 @@
 #include <regdef.h>
-#include <ant_constants.h>
 #define ON 0
 #define OS 1
 #define OE 2
