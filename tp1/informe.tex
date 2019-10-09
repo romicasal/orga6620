@@ -3,13 +3,14 @@
 \usepackage[spanish]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{graphicx}
+\usepackage{multirow} % para las tablas
 
 % graficos
 %\usepackage[pdftex]{graphicx}
 %\usepackage{wrapfig}
 
-%\usepackage{listings}
-%\lstset{language=C,basicstyle=\small}
+\usepackage{listings}
+\lstset{language=C,basicstyle=\small}
 
 %\usepackage{epic,eepic}
 % estilo
@@ -37,15 +38,15 @@
           \texttt{ delpinor@gmail.com }       \\
 		  [2.5ex]
          Emiliano Vega, \textit{Padrón 76676}     \\
-          \texttt{emiliano.vega@mail.com}                      \\
+          \texttt{emiliano.vega@mail.com}                      \\ 
 		  [2.5ex]
 	 Romina Casal, \textit{Padrón 86429} \\
-          \texttt{casal.romina@gmail.com}                      \\
+          \texttt{casal.romina@gmail.com}                      \\ 
 		  [2.5ex]
 		 \\
          \normalsize{2do. Cuatrimestre de 2019}            \\
          \normalsize{86.37 / 66.20 Organización de Computadoras $-$ Práctica Jueves} \\
-         \normalsize{Facultad de Ingeniería, Universidad de Buenos Aires}
+         \normalsize{Facultad de Ingeniería, Universidad de Buenos Aires} 
        }
 
 \date{}
@@ -62,9 +63,9 @@ El presente trabajo práctico nos permitió realizar una comparativa entre la pe
 \end{abstract}
 
 % \tableofcontents
-%
+% 
 % \newpage
-%
+% 
 
 \pagestyle{fancy}
 \fancyhead{}
@@ -83,7 +84,7 @@ El presente trabajo práctico nos permitió realizar una comparativa entre la pe
 % \newpage
 
 \parskip 7.2pt
-%Distinto al resumen, se dice cual es el objetivo principal y se hace un resumen de cada parte que aparece a continuación.
+%Distinto al resumen, se dice cual es el objetivo principal y se hace un resumen de cada parte que aparece a continuación. 
 \section{Introducción}
 Para la realización de las pruebas se ha creado un Makefile adaptado que permite compilar las versiones tp1\_if y tp1\_tables en los niveles 0, 1, 2 y 3 de optimización que ofrece gcc, además de las versiones con las funciones new\_orientation y move\_forward en código assembly.\\
 Se realizará la ejecución de varias opciones de iteraciones con estas versiones para comparar los distintos tiempos de ejecución y observar la tasa de mejora lograda.\\
@@ -93,15 +94,13 @@ Se realizará la ejecución de varias opciones de iteraciones con estas versione
 \newpage
 
 \section{Proceso de Compilación}
+Se adaptó el archivo makefile provisto por la cátedra para generar los ejecutables con las distintas opciones de optimización para el código integralmente en C.\\
 
-Se adaptó el archivo makefile provisto por la cátedra para generar los ejecutables con las distintas opcioens de optimización para el código integralmente en C.\\
-
-\begin{itemize}
-\item[] \textbf{make all\_tp1\_c}: Crea los ejecutables tp1\_if\_opt0, tp1\_if\_opt1, tp1\_if\_opt2, tp1\_if\_opt3 para la versión con jumps en los distintos niveles de optimización, y tp1\_tables\_opt0, tp1\_tables\_opt1, tp1\_tables\_opt2, tp1\_tables\_opt3 para la versión con table.
+\begin{itemize} 
+\item[] \textbf{make all\_tp1\_c}: Crea los ejecutables tp1\_if\_opt0, tp1\_if\_opt1, tp1\_if\_opt2, tp1\_if\_opt3 para la versión con jumps en los distintos niveles de optimización, y tp1\_tables\_opt0, tp1\_tables\_opt1, tp1\_tables\_opt2, tp1\_tables\_opt3 para la versión con tables.
 \item[] \textbf{make tp1\_tables\_asm}: Crea el ejecutable tp1\_tables\_asm para la versión con table que tiene las funciones new\_orientation y move\_forward en assembly.
 \item[] \textbf{make tp1\_if\_asm}: Crea el ejecutable tp1\_if\_asm para la versión con jumps que tiene las funciones new\_orientation y move\_forward en assembly.
 \end{itemize}
-
 Creamos un archivo script pruebas.sh que usando \textbf{/usr/bin/time} cuenta el tiempo de ejecución de cada prueba y guarda los resultados en un archivo \textbf{test\_result.txt}
 Con los valores obtenidos en este archivo se crearon gráficas comparativas de tiempo de ejecución en función de la cantidad de iteraciones.\\
 
@@ -112,8 +111,8 @@ Por ejemplo, la línea:
 /usr/bin/time --output=test_result.txt -a -f "%E\treal\t%U\tuser\t%S\tsys" ./tp1_if_opt0 -g 1000x1000 -p RGBW -r LLLL -t $((10000)) > /dev/null
 \end{verbatim}
 \normalsize
+Escribirá el siguiente resultado en \textbf{test\_result.txt}
 
-Escribirá el siguiente resultado en \textbf{test\_result.txt}:
 \scriptsize
 \begin{verbatim}
 0:11.39	real	11.14	user	0.03	sys
@@ -125,11 +124,14 @@ NOTA: Es probable que sea necesario instalar en la VM ejecutada con QEMU el prog
 
 \newpage
 \section{Desarrollo}
-<<ACA ESCRIBIMOS SOBRE LAS DECISIONES DE DESARROLLO>> \\
+\normalsize
+ACA ESCRIBIMOS SOBRE LAS DECISIONES DE DESARROLLO \\
 \\
 
-Ejecutamos el script \textbf{pruebas.sh} y arroja los siguientes resultados que exporta al archivo \textbf{test_result.txt}
-<< FALTAN LAS PRUEBAS DE ASM >>
+\newpage
+\section{Resultados obtenidos}
+Ejecutamos el script \textbf{pruebas.sh} y arroja los siguientes resultados que exporta al archivo \textbf{test\_result.txt}:
+
 \scriptsize
 \begin{verbatim}
 Pruebas TP1
@@ -190,31 +192,50 @@ tp1_tables - optimizacion 3
 0:17.49	real	17.45	user	0.02	sys
 0:59.53	real	59.45	user	0.03	sys
 8:16.94	real	496.64	user	0.02	sys
+tp1_if - assembly
+0:10.65	real	10.62	user	0.01	sys
+0:11.28	real	11.24	user	0.02	sys
+0:11.25	real	11.22	user	0.01	sys
+0:24.52	real	24.47	user	0.02	sys
+1:31.24	real	91.13	user	0.03	sys
+14:27.08	real	866.43	user	0.04	sys
+tp1_tables - assembly
+0:11.83	real	11.80	user	0.01	sys
+0:10.47	real	10.42	user	0.03	sys
+0:13.32	real	13.26	user	0.03	sys
+0:19.97	real	19.92	user	0.03	sys
+1:56.73	real	116.64	user	0.01	sys
+14:57.11	real	896.46	user	0.05	sys
 \end{verbatim}
+
+\newpage
 \normalsize
+Con los datos obtenidos en las pruebas realizamos dos gráficos comparativas entre las distintas optimizaciones y la versión con funciones en assembly para cada implementación que reflejan el tiempo de ejecución en función de la cantidad de iteraciones:
 
-<< CONCLUSIONES SOBRE LOS RESULTADOS Y GRAFICOS >>
-\\
-\\
+\includegraphics[scale=0.9]{chart1.png} 
 
-\includegraphics[scale=3]{chart.jpg} \\
+\includegraphics[scale=0.9]{chart2.png} 
 
-\includegraphics[scale=3]{chart2.jpg} \\
+\newpage
+En ellos observamos dos tendencias:\\
+En la implementación con jumps, las mediciones nos muestran que la implementación con las funciones \textbf{new\_orientation} y \textbf{move\_forward} en assembly tuvieron una performance inferior que las contrapartidas en C, incluso la compilada con la opción -O0.
+Otra cosa que podemos observar es que de la optimización con opción -O0 a -O1 ya una mejora más significativa que la obtenida entre las compilaciones hechas con opciones -O1, -O2 y -O3.\\
+En la implementación con tables, se observa que la implementación con las funciones en assembly mostró un mejor resultado que la opción -O0, pero aún menos performante que con la opción -O1. Además, entre las opciones -O1 y -O2 hay una diferencia de performance mayor que entre las análogas de la implementación con jumps. Luego, entre las compilacionese con -O2 y -O3 sí coincide la tendencia a mostrar una mejora poco significativa.
 
 \newpage
 
 \section{Conclusión}
-<< CONCLUSIONES FINAL >>
+<< CONCLUSIONES FINAL >> 
 
 
 \vspace{.5cm}
-%Referencias o recursos utilizados durante la investigación para la resolución del trabajo práctico
+%Referencias o recursos utilizados durante la investigación para la resolución del trabajo práctico 
 \begin{thebibliography}{5}
- \bibitem{} La Universidad de Pensilvania.\\ \url{http://www.cse.psu.edu/~pdm12/cmpsc311-f16/}.
  \bibitem{} Profiling and Timing Code
 .\\ \url{https://jakevdp.github.io/PythonDataScienceHandbook/01.07-timing-and-profiling.html}.
  \bibitem{} C to MIPS compiler
 .\\ \url{http://reliant.colab.duke.edu/c2mips/}.
+
 \end{thebibliography}
 
 \clearpage
@@ -222,6 +243,294 @@ tp1_tables - optimizacion 3
 \part{Apéndice}
 \appendix
 
+\normalsize
+\section{Código fuente}\label{sec:codigofuente}
+\subsection{ant\_engine\_jumps.S}
+\begin{lstlisting}
+#include <regdef.h>
+#define ON 0
+#define OS 1
+#define OE 2
+#define OW 3
+
+
+.data
+ime: .asciiz "TP1 2Q2019: Implement me!"
+
+.text
+.align 2
+.globl new_orientation
+.ent new_orientation
+
+new_orientation:
+#    la a0, ime
+#    jal doPanic
+#armo stack
+	subu	sp, sp, 24
+	sw	ra, 16(sp)
+	sw	fp, 12(sp)
+	sw	gp, 8(sp)
+	move 	fp, sp
+
+	# guardo parametros
+	sw	a0, 0(sp)	# orientation
+	sw	a1, 4(sp)	# rule
+	# cargo parametros en registros
+	move	t0, a0
+	move	t1, a1
+	
+	# orientacion?
+	
+norte:	bne	t0, 0, sur
+	bne	t1, zero, norte_derecha	# RL = 0
+	addi	t2, zero, 3			# OW = 3
+	j	return_value
+norte_derecha:
+	addi	t2, zero, 2			# OE = 2
+	j	return_value
+sur:	bne	t0, 1, este
+	bne	t1, zero, sur_derecha
+	addi	t2, zero, 2
+	j	return_value
+sur_derecha:
+	addi	t2, zero, 3
+	j	return_value
+este:	bne	t0, 2, oeste
+	bne	t1, zero, este_derecha
+	addi	t2, zero, 0			# ON = 0
+	j	return_value
+este_derecha:
+	addi	t2, zero, 1			# OS = 1
+	j	return_value
+			
+oeste:	bne	t1, zero, oeste_derecha
+	addi	t2, zero, 1
+	j	return_value
+oeste_derecha:
+	addi	t2, zero, 0
+	
+return_value:
+	# return new orientation
+	move	v0, t2
+			
+	#borro stack
+	lw	gp, 8(sp)
+	lw	fp, 12(sp)
+	lw	ra, 16(sp)
+	addu	sp, sp, 24
+	jr	ra
+
+
+.end new_orientation
+
+.text
+.align 2
+.globl move_forward
+.ent move_forward
+move_forward:
+	#    la a0, ime
+	#   jal doPanic
+	# allocate stack frame(SRA=8 LTA=0 ABA=0)
+	addi	sp, sp, -8
+	sw		fp, 4(sp)
+	sw		gp, 0(sp)
+	move 	fp, sp
+
+	# load struct ant_t
+	lw		t0, 0(a0)			# x
+	lw		t1, 4(a0)			# y
+	lw		t2, 8(a0)			# o
+	# switch statement
+	bne		t2, ON, case_south
+	# adjust(&ant->y, ant->y - 1, height);
+	addi	t1, t1, -1		# ant->y - 1
+	div		t1, a2			# ant->y / heigth
+	mfhi	t5					# remainder moved into t5
+	sw		t5, 4(a0)			# &ant->y
+	j		done
+case_south:
+	bne		t2, OS, case_east
+	addi	t1, t1, 1			# ant->y + 1
+	div		t1, a2			# ant->y / height
+	mfhi	t5					# remainder moved into t5
+	sw		t5, 4(a0)			# &ant->y
+	j		done
+case_east:
+	bne		t2, OE, case_west
+	addi	t0, t0, 1			# ant->x + 1
+	div		t0, a1				# ant->x / width
+	mfhi	t5					# remainder moved into t5
+	sw		t5, 0(a0)			# &ant->x
+	j		done
+case_west:
+	#bne		t2, OW, case_default
+	addi	t0, t0, -1		# ant->x + 1
+	div		t0, a1			# ant->x / width
+	mfhi	t5					# remainder moved into t5
+	sw		t5, 0(a0)			# &ant->x
+	j		done
+done:
+	lw		fp, 4(sp)
+	lw		gp, 0(sp)
+	addiu	sp, sp, 8
+	move	v0, a0			# Save the return value in v0
+	jr		ra
+.end move_forward
+
+\end{lstlisting}
+
+\normalsize
+\subsection{ant\_engine\_tables.S}
+\begin{lstlisting}
+#include <regdef.h>
+#define ON 0
+#define OS 1
+#define OE 2
+#define OW 3
+.data
+ime: .asciiz "TP1 2Q2019: Implement me!"
+rotation_rules:	.word	3, 2, 2, 3, 0, 1, 1, 0
+allowed_forward: .word 0, 1, 2, 3		# steps
+.text
+.align 2
+.globl new_orientation
+.ent new_orientation
+
+new_orientation:
+#    la a0, ime
+#    jal doPanic
+	#armo stack
+	subu	sp, sp, 24
+	sw	ra, 16(sp)
+	sw	fp, 12(sp)
+	sw	gp, 8(sp)
+	move 	fp, sp
+
+	# guardo parametros
+	sw	a0, 0(sp)	# orientation
+	sw	a1, 4(sp)	# rule
+	
+	# cargo parametros en registros
+	# y calculo indice en el array
+	mul	t0, a0, 8	# indice orientation x 4bytes = word
+	mul	t1, a1, 4
+	add	t0, t0, t1
+	la	t2, rotation_rules(t0)
+
+	# return new orientation
+	lw	v0, (t2)
+
+	#borro stack
+	lw	gp, 8(sp)
+	lw	fp, 12(sp)
+	lw	ra, 16(sp)
+	addu	sp, sp, 24
+	jr	ra
+    
+.end new_orientation
+
+.text
+.align 2
+.globl move_forward
+.ent move_forward
+move_forward:
+    #la a0, ime
+    #jal doPanic
+    addi	sp, sp, -32			#allocate stack frame(SRA=16 LTA=16 ABA=0)
+    sw		ra, 24(sp)
+    sw		fp, 20(sp)
+    sw		gp, 16(sp)
+    sw		a2, 12(sp)			# relevants_bouds[0] = height
+    sw		a2, 8(sp)				# relevants_bouds[1] = height
+    sw		a1, 4(sp)				# relevants_bouds[2] = width
+    sw		a1, 0(sp)				# relevants_bouds[3] = width
+    lw		t3, 8(a0)				# load ant_t->o = index
+    sll		t3, t3, 2				# index*4
+    add		t4, t3, sp			# base + index*4
+    lw		t4, 0(t4)				# = bound
+    la		t5, allowed_forward	# base array address
+    add		t5, t5, t3			# base + index*4
+	lw		t5, 0(t5)				# = step_fun
+	bne		t5, ON, step_south		# step_north
+	lw		t6, 4(a0)				# ant->y
+	addi	t6, t6, -1			# ant->y - 1
+	div		t6, t4				# ant->y / height
+	mfhi	t6						# remainder moved into t6
+	sw		t6, 4(a0)				# &ant->y
+	j		done
+step_south:
+	bne		t5, OS, step_east
+	lw		t6, 4(a0)				# ant->y
+	addi	t6, t6, 1				# ant->y + 1
+	div		t6, t4				# ant->y / height
+	mfhi	t6						# remainder moved into t6
+	sw		t6, 4(a0)				# &ant->y
+	j		done
+step_east:
+	bne		t5, OE, step_west
+	lw		t6, 0(a0)				# ant->x
+	addi	t6, t6, 1				# ant->x + 1
+	div		t6, t4				# ant->x / width
+	mfhi	t6						# remainder moved into t6
+	sw		t6, 0(a0)				# &ant->x
+	j		done
+step_west:
+	lw		t6, 0(a0)				# ant->x
+	addi	t6, t6, -1			# ant->x - 1
+	div		t6, t4				# ant->x / width
+	mfhi	t6						# remainder moved into t6
+	sw		t6, 0(a0)				# &ant->x
+	j		done
+done:
+	lw		ra, 24(sp)
+    lw		fp, 20(sp)
+    lw		gp, 16(sp)
+    addi	sp, sp, 32
+    move	v0, a0
+    jr		ra
+.end move_forward
+#fin
+\end{lstlisting}
+
+\newpage
+\normalsize
+\section{Diagramas de stacks}\label{sec:diagstacks}
+
+\subsection{ant\_engine\_jumps.S}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{cccllll}
+\multicolumn{3}{c}{\textbf{new\_orientation}}                                                                                &                       & \multicolumn{3}{c}{\textbf{move\_forward}}                                                                                  \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|l|}{\textbf{Sección}}     & \multicolumn{1}{c|}{\textbf{Variable}} & \multicolumn{1}{c|}{\textbf{Posición}} & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{\textbf{Sección}}     & \multicolumn{1}{c|}{\textbf{Variable}} & \multicolumn{1}{c|}{\textbf{Posición}} \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|c|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{c|}{-}                 & \multicolumn{1}{c|}{20}                & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{\multirow{2}{*}{SRA}} & \multicolumn{1}{c|}{fp}                & \multicolumn{1}{c|}{4}                 \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{ra}                & \multicolumn{1}{c|}{16}                & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{}                     & \multicolumn{1}{c|}{gp}                & \multicolumn{1}{c|}{0}                 \\ \cline{2-3} \cline{5-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{fp}                & \multicolumn{1}{c|}{12}                &                       &                                           &                                        &                                        \\ \cline{2-3}
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{gp}                & \multicolumn{1}{c|}{8}                 &                       &                                           &                                        &                                        \\ \cline{1-3}
+\multicolumn{1}{|c|}{\multirow{2}{*}{LTA}} & \multicolumn{1}{c|}{orientation}       & \multicolumn{1}{c|}{4}                 &                       &                                           &                                        &                                        \\ \cline{2-3}
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{rule}              & \multicolumn{1}{c|}{0}                 &                       &                                           &                                        &                                        \\ \cline{1-3}
+\end{tabular}
+\end{table}
+
+\subsection{ant\_engine\_tables.S}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{cccllll}
+\multicolumn{3}{c}{\textbf{new\_orientation}}                                                                                &                       & \multicolumn{3}{c}{\textbf{move\_forward}}                                                                                  \\ \cline{1-3} \cline{6-7} 
+\multicolumn{1}{|c|}{\textbf{Sección}}     & \multicolumn{1}{c|}{\textbf{Variable}} & \multicolumn{1}{c|}{\textbf{Posición}} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\textbf{Sección}}     & \multicolumn{1}{l|}{\textbf{Variable}} & \multicolumn{1}{l|}{\textbf{Posición}} \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|c|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{c|}{-}                 & \multicolumn{1}{c|}{20}                & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{l|}{-}                 & \multicolumn{1}{l|}{28}                \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{ra}                & \multicolumn{1}{c|}{16}                & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{ra}                & \multicolumn{1}{l|}{24}                \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{fp}                & \multicolumn{1}{c|}{12}                & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{fp}                & \multicolumn{1}{l|}{20}                \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{gp}                & \multicolumn{1}{c|}{8}                 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{gp}                & \multicolumn{1}{l|}{16}                \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|c|}{\multirow{2}{*}{LTA}} & \multicolumn{1}{c|}{orientation}       & \multicolumn{1}{c|}{4}                 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\multirow{4}{*}{LTA}} & \multicolumn{1}{l|}{a}                 & \multicolumn{1}{l|}{12}                \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{rule}              & \multicolumn{1}{c|}{0}                 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{b}                 & \multicolumn{1}{l|}{8}                 \\ \cline{1-3} \cline{6-7} 
+                                           &                                        &                                        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{c}                 & \multicolumn{1}{l|}{4}                 \\ \cline{6-7} 
+                                           &                                        &                                        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{d}                 & \multicolumn{1}{l|}{0}                 \\ \cline{5-7} 
+\end{tabular}
+\end{table}
+
+\newpage
 \section{Enunciado original}\label{sec:enunciado}
 \includepdf[pages={-}]{enunciado.pdf}
 
