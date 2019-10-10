@@ -90,7 +90,7 @@ A continuación, se realizarán distintos procedimientos con motivo de analizar 
 La ley de Amdahl mide cuánto mejora o empeora un sistema al introducir mejoras en un sistema existente dependiendo de la frecuencia de utilización del elemento modificado.\\
 
 \begin{equation}
- SpeedUp =\frac{1}{(1-Fm) + \frac{Fm}{Am}}
+ SpeedUp =\frac{1}{(1-Fm) + \frac{Fm}{SU}}
 \end{equation}
 
 Donde:\\
@@ -635,9 +635,11 @@ Con estos valores se puede calcular el SpeedUp de la función \textbf{paint} usa
 
 Donde:\\
 
-k = 0.974 representa 97.4\% de la ejecución del programa.
+k = 0.974 representa 97.4\% de la ejecución del programa que para el caso de nuestro ejemplo tardó 452 segundos.
 
-s = La relación entre el tiempo anterior y el actual debido a la optimización. En este caso desde los 440.3 segundos hasta los 428.5 segundos.
+s = La relación entre el tiempo anterior y el actual debido a la optimización. En este caso desde los 440.3 segundos( que representa el 97.4\% del tiempo de nuestro ejemplo) hasta los 428.5 segundos(que representa el 94.8\%) luego de la optimización.\\
+
+El cociente entre 440.3 segundos y 428.5 segundos da 1.027. Luego calculamos el SpeedUp:
 \begin{equation*} 
 \begin{split}
  SpeedUp & =\frac{1}{(1-k) + \frac{k}{s}} \\
@@ -654,25 +656,25 @@ A partir del siguiente gráfico vamos a calcular los SpeedUp locales de todas la
 
 \includegraphics[scale=3]{chart2.jpg} \\
 
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline 
-Función & Tiempo(s): tp0\_if & Tiempo(s): tp0\_tables \\ 
+Función & Tiempo(s): tp0\_if & Tiempo(s): tp0\_tables & SU \\ 
 \hline 
-move\_forward & 95.8 & 115.2 \\ 
+move\_forward & 95.8 & 115.2 & 0.83\\ 
 \hline 
-new\_orientation & 79.1 & 51.1 \\ 
+new\_orientation & 79.1 & 51.1 & 1.55\\ 
 \hline 
-rule\_for\_colour & 73.2 & 24.4 \\ 
+rule\_for\_colour & 73.2 & 24.4 & 3 \\ 
 \hline 
-paint\_at & 23.5 & 17.1 \\ 
+paint\_at & 23.5 & 17.1 & 1.37\\ 
 \hline 
-colour\_at & 19.9 & 14 \\ 
+colour\_at & 19.9 & 14 & 1.42\\ 
 \hline 
-next\_colour & 15.8 & 31.2 \\ 
+next\_colour & 15.8 & 31.2 & 0.51 \\ 
 \hline 
 \end{tabular} \\
  
- Calculamos los Speedup para las funciones llamadas dentro de la función \textbf{paint}:\\
+ Calculamos los Speedup para las funciones llamadas dentro de la función \textbf{paint}. Para esto obtenemos lo valores de la tabla y los porcentajes de las figuras coloreadas(sin optimización):\\
  
 \textbf{move\_forward}:
 \begin{equation*} 
