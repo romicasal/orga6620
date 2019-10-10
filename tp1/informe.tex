@@ -125,8 +125,11 @@ NOTA: Es probable que sea necesario instalar en la VM ejecutada con QEMU el prog
 \newpage
 \section{Desarrollo}
 \normalsize
-ACA ESCRIBIMOS SOBRE LAS DECISIONES DE DESARROLLO \\
-\\
+Para las adaptaciones a assembly en general, usamos la convención ABI dada en clase, conservando los parámetros recibidos en la LTA del stack y reservando espacio para los registros \$gp, \$fp y \$ra en la SRA.\\
+Para el caso de la versión con jumps, decidimos implementar las funciones \textbf{decide()} y \textbf{adjust()} en forma inline en el código de \textbf{new\_orientation} y \textbf{move\_forward}, ya que la primera era una macro, y en el caso de la segunda para reducir la creación de llamadas con sus respectivos stacks.\\
+En el caso de la versión con tables, reservamos en el segmento de datos los arrays \textbf{rotation\_rules} y \textbf{allowed\_forward} y para tratarlos como variables estáticas en lugar de reservar continuamente el espacio y asignar los valores dinámicamente.\\
+
+
 
 \newpage
 \section{Resultados obtenidos}
@@ -225,8 +228,8 @@ En la implementación con tables, se observa que la implementación con las func
 \newpage
 
 \section{Conclusión}
-<< CONCLUSIONES FINAL >> 
-
+De acuerdo a los resultados obtenidos al implementar las funciones solicitadas en assembly, concluimos por un lado que la implementación no mejora la ejecución en el caso de Jumps, ni siquiera comparado con la opción de optimización 0, y en el caso de Tables, sólo mejora con respecto a esta optimización, lejos de las demás opciones.
+Suponemos que se están dando dos situaciones. Por un lado, que el código assembly generado por el compilador en todos los niveles de optimización es casi siempre más performante que el que hemos realizado. Y por otro lado, que aún siéndolo, las funciones implementadas no son mejora suficiente para influir en un cambio de performance del programa en general.
 
 \vspace{.5cm}
 %Referencias o recursos utilizados durante la investigación para la resolución del trabajo práctico 
