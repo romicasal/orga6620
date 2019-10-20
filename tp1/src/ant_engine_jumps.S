@@ -81,12 +81,13 @@ return_value:
 move_forward:
 	#    la a0, ime
 	#   jal doPanic
-	# allocate stack frame(SRA=8 LTA=0 ABA=0)
-	addi	sp, sp, -8
-	sw		fp, 4(sp)
-	sw		gp, 0(sp)
-	move 	fp, sp
-
+	# allocate stack frame(SRA=8 LTA=0 ABA=16)
+	subu	sp, sp, 24
+	sw		fp, 20(sp)
+	sw		gp, 16(sp)
+   	sw		a2, 8(sp)
+   	sw		a1, 4(sp)
+   	sw		a0, 0(sp)
 	# load struct ant_t
 	lw		t0, 0(a0)			# x
 	lw		t1, 4(a0)			# y
@@ -94,15 +95,15 @@ move_forward:
 	# switch statement
 	bne		t2, ON, case_south
 	# adjust(&ant->y, ant->y - 1, height);
-	addi	t1, t1, -1		# ant->y - 1
-	div		t1, a2			# ant->y / heigth
+	addi	t1, t1, -1			# ant->y - 1
+	div		t1, a2				# ant->y / heigth
 	mfhi	t5					# remainder moved into t5
 	sw		t5, 4(a0)			# &ant->y
 	j		done
 case_south:
 	bne		t2, OS, case_east
 	addi	t1, t1, 1			# ant->y + 1
-	div		t1, a2			# ant->y / height
+	div		t1, a2				# ant->y / height
 	mfhi	t5					# remainder moved into t5
 	sw		t5, 4(a0)			# &ant->y
 	j		done
@@ -114,16 +115,18 @@ case_east:
 	sw		t5, 0(a0)			# &ant->x
 	j		done
 case_west:
-	#bne		t2, OW, case_default
-	addi	t0, t0, -1		# ant->x + 1
-	div		t0, a1			# ant->x / width
+	addi	t0, t0, -1			# ant->x + 1
+	div		t0, a1				# ant->x / width
 	mfhi	t5					# remainder moved into t5
 	sw		t5, 0(a0)			# &ant->x
 	j		done
 done:
-	lw		fp, 4(sp)
-	lw		gp, 0(sp)
-	addiu	sp, sp, 8
-	move	v0, a0			# Save the return value in v0
+	lw		fp, 20(sp)
+	lw		gp, 16(sp)
+   	lw		a2, 8(sp)
+   	lw		a1, 4(sp)
+   	lw		a0, 0(sp)
+	addi	sp, sp, 24
+	move	v0, a0				# Save the return value in v0
 	jr		ra
 .end move_forward
