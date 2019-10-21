@@ -133,11 +133,49 @@ Para las adaptaciones a assembly en general, usamos la convención ABI dada en c
 Para el caso de la versión con jumps, decidimos implementar las funciones \textbf{decide()} y \textbf{adjust()} en forma inline en el código de \textbf{new\_orientation} y \textbf{move\_forward}, ya que la primera era una macro, y en el caso de la segunda para reducir la creación de llamadas con sus respectivos stacks.\\
 En el caso de la versión con tables, reservamos en el segmento de datos los arrays \textbf{rotation\_rules} y \textbf{allowed\_forward} y para tratarlos como variables estáticas en lugar de reservar continuamente el espacio y asignar los valores dinámicamente.\\
 
+\normalsize
+\section{Diagramas de stacks}\label{sec:diagstacks}
 
+\subsection{ant\_engine\_jumps.S}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{ccclccc}
+\multicolumn{3}{c}{\textbf{new\_orientation}}                                                                 &                       & \multicolumn{3}{c}{\textbf{move\_forward}}                                                                \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|l|}{Sección}              & \multicolumn{1}{c|}{Variable}    & \multicolumn{1}{c|}{Posición} & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{Sección}              & \multicolumn{1}{c|}{Variable} & \multicolumn{1}{c|}{Posición} \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|c|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{c|}{-}           & \multicolumn{1}{c|}{20}       & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{\multirow{2}{*}{SRA}} & \multicolumn{1}{c|}{fp}       & \multicolumn{1}{c|}{20}       \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{ra}          & \multicolumn{1}{c|}{16}       & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{}                     & \multicolumn{1}{c|}{gp}       & \multicolumn{1}{c|}{16}       \\ \cline{2-3} \cline{5-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{fp}          & \multicolumn{1}{c|}{12}       & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{\multirow{4}{*}{LTA}} & \multicolumn{1}{c|}{-}        & \multicolumn{1}{c|}{12}       \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{gp}          & \multicolumn{1}{c|}{8}        & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{}                     & \multicolumn{1}{c|}{height}   & \multicolumn{1}{c|}{8}        \\ \cline{1-3} \cline{6-7} 
+\multicolumn{1}{|c|}{\multirow{2}{*}{LTA}} & \multicolumn{1}{c|}{orientation} & \multicolumn{1}{c|}{4}        & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{}                     & \multicolumn{1}{c|}{width}    & \multicolumn{1}{c|}{4}        \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{rule}        & \multicolumn{1}{c|}{0}        & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{}                     & \multicolumn{1}{c|}{*ant}     & \multicolumn{1}{c|}{0}        \\ \cline{1-3} \cline{5-7} 
+\end{tabular}
+\end{table}
+
+\subsection{ant\_engine\_tables.S}
+
+\begin{table}[htp]
+\centering
+\begin{tabular}{cccllll}
+\multicolumn{3}{c}{\textbf{new\_orientation}}                                                                 &                       & \multicolumn{3}{c}{\textbf{move\_forward}}                                                                \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|c|}{Sección}              & \multicolumn{1}{c|}{Variable}    & \multicolumn{1}{c|}{Posición} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{Sección}              & \multicolumn{1}{l|}{Variable} & \multicolumn{1}{l|}{Posición} \\ \cline{1-3} \cline{5-7} 
+\multicolumn{1}{|c|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{c|}{-}           & \multicolumn{1}{c|}{20}       & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\multirow{2}{*}{SRA}} & \multicolumn{1}{l|}{fp}       & \multicolumn{1}{l|}{36}       \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{ra}          & \multicolumn{1}{c|}{16}       & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{gp}       & \multicolumn{1}{l|}{32}       \\ \cline{2-3} \cline{5-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{fp}          & \multicolumn{1}{c|}{12}       & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\multirow{8}{*}{LTA}} & \multicolumn{1}{l|}{a}        & \multicolumn{1}{l|}{28}       \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{gp}          & \multicolumn{1}{c|}{8}        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{b}        & \multicolumn{1}{l|}{24}       \\ \cline{1-3} \cline{6-7} 
+\multicolumn{1}{|c|}{\multirow{2}{*}{LTA}} & \multicolumn{1}{c|}{orientation} & \multicolumn{1}{c|}{4}        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{c}        & \multicolumn{1}{l|}{20}       \\ \cline{2-3} \cline{6-7} 
+\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{rule}        & \multicolumn{1}{c|}{0}        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{d}        & \multicolumn{1}{l|}{16}       \\ \cline{1-3} \cline{6-7} 
+                                           &                                  &                               & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{-}        & \multicolumn{1}{l|}{12}       \\ \cline{6-7} 
+                                           &                                  &                               & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{height}   & \multicolumn{1}{l|}{8}        \\ \cline{6-7} 
+\multicolumn{1}{l}{}                       & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}          & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{width}    & \multicolumn{1}{l|}{4}        \\ \cline{6-7} 
+\multicolumn{1}{l}{}                       & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}          & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{*ant}     & \multicolumn{1}{l|}{0}        \\ \cline{5-7} 
+\multicolumn{1}{l}{}                       & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}          &                       &                                           &                               &                              
+\end{tabular}
+\end{table}
 
 \newpage
 \section{Resultados obtenidos}
-Ejecutamos el script \textbf{pruebas.sh} y arroja los siguientes resultados que exporta al archivo \textbf{test\_result.txt}:
+Ejecutamos el script \textbf{pruebas.sh} y \textbf{pruebas2.sh} y arrojaron los siguientes resultados que exporta al archivo \textbf{test\_result.txt}:
 
 \scriptsize
 \begin{verbatim}
@@ -200,19 +238,19 @@ tp1_tables - optimizacion 3
 0:59.53	real	59.45	user	0.03	sys
 8:16.94	real	496.64	user	0.02	sys
 tp1_if - assembly
-0:10.65	real	10.62	user	0.01	sys
-0:11.28	real	11.24	user	0.02	sys
-0:11.25	real	11.22	user	0.01	sys
-0:24.52	real	24.47	user	0.02	sys
-1:31.24	real	91.13	user	0.03	sys
-14:27.08	real	866.43	user	0.04	sys
+0:12.04	real	11.98	user	0.04	sys
+0:10.33	real	10.28	user	0.02	sys
+0:13.78	real	13.74	user	0.02	sys
+0:21.38	real	21.32	user	0.04	sys
+1:49.43	real	109.34	user	0.00	sys
+14:43.18	real	882.48	user	0.06	sys
 tp1_tables - assembly
-0:11.83	real	11.80	user	0.01	sys
-0:10.47	real	10.42	user	0.03	sys
-0:13.32	real	13.26	user	0.03	sys
-0:19.97	real	19.92	user	0.03	sys
-1:56.73	real	116.64	user	0.01	sys
-14:57.11	real	896.46	user	0.05	sys
+0:12.72	real	12.66	user	0.04	sys
+0:12.00	real	11.96	user	0.02	sys
+0:12.24	real	12.19	user	0.02	sys
+0:19.57	real	19.52	user	0.02	sys
+1:37.50	real	97.41	user	0.02	sys
+17:37.48	real	1056.33	user	0.03	sys
 \end{verbatim}
 
 \newpage
@@ -227,9 +265,7 @@ Con los datos obtenidos en las pruebas realizamos dos gráficos comparativas ent
 En ellos observamos dos tendencias:\\
 En la implementación con jumps, las mediciones nos muestran que la implementación con las funciones \textbf{new\_orientation} y \textbf{move\_forward} en assembly tuvieron una performance inferior que las contrapartidas en C, incluso la compilada con la opción -O0.
 Otra cosa que podemos observar es que de la optimización con opción -O0 a -O1 ya una mejora más significativa que la obtenida entre las compilaciones hechas con opciones -O1, -O2 y -O3.\\
-En la implementación con tables, se observa que la implementación con las funciones en assembly mostró un mejor resultado que la opción -O0, pero aún menos performante que con la opción -O1. Además, entre las opciones -O1 y -O2 hay una diferencia de performance mayor que entre las análogas de la implementación con jumps. Luego, entre las compilacionese con -O2 y -O3 sí coincide la tendencia a mostrar una mejora poco significativa.
-
-\newpage
+En la implementación con tables, se observa que la implementación con las funciones en assembly mostró un mejor resultado que la opción -O0, pero aún menos performante que con la opción -O1. Además, entre las opciones -O1 y -O2 hay una diferencia de performance mayor que entre las análogas de la implementación con jumps. Luego, entre las compilacionese con -O2 y -O3 sí coincide la tendencia a mostrar una mejora poco significativa.\\
 
 \section{Conclusión}
 De acuerdo a los resultados obtenidos al implementar las funciones solicitadas en assembly, concluimos por un lado que la implementación no mejora la ejecución en el caso de Jumps, ni siquiera comparado con la opción de optimización 0, y en el caso de Tables, sólo mejora con respecto a esta optimización, lejos de las demás opciones.
@@ -340,19 +376,20 @@ return_value:
 move_forward:
 	#    la a0, ime
 	#   jal doPanic
-	# allocate stack frame(SRA=8 LTA=0 ABA=0)
-	addi	sp, sp, -8
-	sw		fp, 4(sp)
-	sw		gp, 0(sp)
-	move 	fp, sp
-
+	# allocate stack frame(SRA=8 LTA=0 ABA=16)
+	subu	sp, sp, 24
+	sw		fp, 20(sp)
+	sw		gp, 16(sp)
+   	sw		a2, 8(sp)
+   	sw		a1, 4(sp)
+   	sw		a0, 0(sp)
 	# load struct ant_t
 	lw		t0, 0(a0)			# x
 	lw		t1, 4(a0)			# y
 	lw		t2, 8(a0)			# o
-								# switch statement
+	# switch statement
 	bne		t2, ON, case_south
-								# adjust(&ant->y, ant->y - 1, height);
+	# adjust(&ant->y, ant->y - 1, height);
 	addi	t1, t1, -1			# ant->y - 1
 	div		t1, a2				# ant->y / heigth
 	mfhi	t5					# remainder moved into t5
@@ -373,16 +410,18 @@ case_east:
 	sw		t5, 0(a0)			# &ant->x
 	j		done
 case_west:
-	#bne		t2, OW, case_default
 	addi	t0, t0, -1			# ant->x + 1
 	div		t0, a1				# ant->x / width
 	mfhi	t5					# remainder moved into t5
 	sw		t5, 0(a0)			# &ant->x
 	j		done
 done:
-	lw		fp, 4(sp)
-	lw		gp, 0(sp)
-	addiu	sp, sp, 8
+	lw		fp, 20(sp)
+	lw		gp, 16(sp)
+   	lw		a2, 8(sp)
+   	lw		a1, 4(sp)
+   	lw		a0, 0(sp)
+	addi	sp, sp, 24
 	move	v0, a0				# Save the return value in v0
 	jr		ra
 .end move_forward
@@ -446,25 +485,28 @@ new_orientation:
 move_forward:
     #la a0, ime
     #jal doPanic
-    addi	sp, sp, -32			#allocate stack frame(SRA=16 LTA=16 ABA=0)
-    sw		ra, 24(sp)
-    sw		fp, 20(sp)
-    sw		gp, 16(sp)
-    sw		a2, 12(sp)			# relevants_bouds[0] = height
-    sw		a2, 8(sp)				# relevants_bouds[1] = height
-    sw		a1, 4(sp)				# relevants_bouds[2] = width
-    sw		a1, 0(sp)				# relevants_bouds[3] = width
+    subu	sp, sp, 40				#allocate stack frame(SRA=8 LTA=16 ABA=16)
+    sw		fp, 36(sp)
+    sw		gp, 32(sp)
+    sw		a1, 28(sp)				# relevants_bouds[3] = width
+    sw		a1, 24(sp)				# relevants_bouds[2] = width
+    sw		a2, 20(sp)				# relevants_bouds[1] = height
+    sw		a2, 16(sp)				# relevants_bouds[0] = height
+   	sw		a2, 8(sp)
+   	sw		a1, 4(sp)
+   	sw		a0, 0(sp)
     lw		t3, 8(a0)				# load ant_t->o = index
     sll		t3, t3, 2				# index*4
-    add		t4, t3, sp			# base + index*4
+    addi	t4, sp, 16				# align stack
+    add		t4, t3, t4				# base + index*4
     lw		t4, 0(t4)				# = bound
-    la		t5, allowed_forward	# base array address
-    add		t5, t5, t3			# base + index*4
+    la		t5, allowed_forward		# base array address
+    add		t5, t5, t3				# base + index*4
 	lw		t5, 0(t5)				# = step_fun
 	bne		t5, ON, step_south		# step_north
 	lw		t6, 4(a0)				# ant->y
-	addi	t6, t6, -1			# ant->y - 1
-	div		t6, t4				# ant->y / height
+	addi	t6, t6, -1				# ant->y - 1
+	div		t6, t4					# ant->y / height
 	mfhi	t6						# remainder moved into t6
 	sw		t6, 4(a0)				# &ant->y
 	j		done
@@ -472,7 +514,7 @@ step_south:
 	bne		t5, OS, step_east
 	lw		t6, 4(a0)				# ant->y
 	addi	t6, t6, 1				# ant->y + 1
-	div		t6, t4				# ant->y / height
+	div		t6, t4					# ant->y / height
 	mfhi	t6						# remainder moved into t6
 	sw		t6, 4(a0)				# &ant->y
 	j		done
@@ -480,66 +522,29 @@ step_east:
 	bne		t5, OE, step_west
 	lw		t6, 0(a0)				# ant->x
 	addi	t6, t6, 1				# ant->x + 1
-	div		t6, t4				# ant->x / width
+	div		t6, t4					# ant->x / width
 	mfhi	t6						# remainder moved into t6
 	sw		t6, 0(a0)				# &ant->x
 	j		done
 step_west:
 	lw		t6, 0(a0)				# ant->x
-	addi	t6, t6, -1			# ant->x - 1
-	div		t6, t4				# ant->x / width
+	addi	t6, t6, -1				# ant->x - 1
+	div		t6, t4					# ant->x / width
 	mfhi	t6						# remainder moved into t6
 	sw		t6, 0(a0)				# &ant->x
 	j		done
 done:
-	lw		ra, 24(sp)
-    lw		fp, 20(sp)
-    lw		gp, 16(sp)
-    addi	sp, sp, 32
+    lw		fp, 36(sp)
+    lw		gp, 32(sp)
+    lw		a2, 8(sp)
+   	lw		a1, 4(sp)
+   	lw		a0, 0(sp)
+    addi	sp, sp, 40
     move	v0, a0
     jr		ra
 .end move_forward
 #fin
 \end{lstlisting}
-
-
-\newpage
-\normalsize
-\section{Diagramas de stacks}\label{sec:diagstacks}
-
-\subsection{ant\_engine\_jumps.S}
-
-\begin{table}[htp]
-\centering
-\begin{tabular}{cccllll}
-\multicolumn{3}{c}{\textbf{new\_orientation}}                                                                                &                       & \multicolumn{3}{c}{\textbf{move\_forward}}                                                                                  \\ \cline{1-3} \cline{5-7} 
-\multicolumn{1}{|l|}{\textbf{Sección}}     & \multicolumn{1}{c|}{\textbf{Variable}} & \multicolumn{1}{c|}{\textbf{Posición}} & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{\textbf{Sección}}     & \multicolumn{1}{c|}{\textbf{Variable}} & \multicolumn{1}{c|}{\textbf{Posición}} \\ \cline{1-3} \cline{5-7} 
-\multicolumn{1}{|c|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{c|}{-}                 & \multicolumn{1}{c|}{20}                & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{\multirow{2}{*}{SRA}} & \multicolumn{1}{c|}{fp}                & \multicolumn{1}{c|}{4}                 \\ \cline{2-3} \cline{6-7} 
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{ra}                & \multicolumn{1}{c|}{16}                & \multicolumn{1}{l|}{} & \multicolumn{1}{c|}{}                     & \multicolumn{1}{c|}{gp}                & \multicolumn{1}{c|}{0}                 \\ \cline{2-3} \cline{5-7} 
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{fp}                & \multicolumn{1}{c|}{12}                &                       &                                           &                                        &                                        \\ \cline{2-3}
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{gp}                & \multicolumn{1}{c|}{8}                 &                       &                                           &                                        &                                        \\ \cline{1-3}
-\multicolumn{1}{|c|}{\multirow{2}{*}{LTA}} & \multicolumn{1}{c|}{orientation}       & \multicolumn{1}{c|}{4}                 &                       &                                           &                                        &                                        \\ \cline{2-3}
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{rule}              & \multicolumn{1}{c|}{0}                 &                       &                                           &                                        &                                        \\ \cline{1-3}
-\end{tabular}
-\end{table}
-
-\subsection{ant\_engine\_tables.S}
-
-\begin{table}[htp]
-\centering
-\begin{tabular}{cccllll}
-\multicolumn{3}{c}{\textbf{new\_orientation}}                                                                                &                       & \multicolumn{3}{c}{\textbf{move\_forward}}                                                                                  \\ \cline{1-3} \cline{6-7} 
-\multicolumn{1}{|c|}{\textbf{Sección}}     & \multicolumn{1}{c|}{\textbf{Variable}} & \multicolumn{1}{c|}{\textbf{Posición}} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\textbf{Sección}}     & \multicolumn{1}{l|}{\textbf{Variable}} & \multicolumn{1}{l|}{\textbf{Posición}} \\ \cline{1-3} \cline{5-7} 
-\multicolumn{1}{|c|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{c|}{-}                 & \multicolumn{1}{c|}{20}                & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\multirow{4}{*}{SRA}} & \multicolumn{1}{l|}{-}                 & \multicolumn{1}{l|}{28}                \\ \cline{2-3} \cline{6-7} 
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{ra}                & \multicolumn{1}{c|}{16}                & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{ra}                & \multicolumn{1}{l|}{24}                \\ \cline{2-3} \cline{6-7} 
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{fp}                & \multicolumn{1}{c|}{12}                & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{fp}                & \multicolumn{1}{l|}{20}                \\ \cline{2-3} \cline{6-7} 
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{gp}                & \multicolumn{1}{c|}{8}                 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{gp}                & \multicolumn{1}{l|}{16}                \\ \cline{1-3} \cline{5-7} 
-\multicolumn{1}{|c|}{\multirow{2}{*}{LTA}} & \multicolumn{1}{c|}{orientation}       & \multicolumn{1}{c|}{4}                 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{\multirow{4}{*}{LTA}} & \multicolumn{1}{l|}{a}                 & \multicolumn{1}{l|}{12}                \\ \cline{2-3} \cline{6-7} 
-\multicolumn{1}{|c|}{}                     & \multicolumn{1}{c|}{rule}              & \multicolumn{1}{c|}{0}                 & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{b}                 & \multicolumn{1}{l|}{8}                 \\ \cline{1-3} \cline{6-7} 
-                                           &                                        &                                        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{c}                 & \multicolumn{1}{l|}{4}                 \\ \cline{6-7} 
-                                           &                                        &                                        & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}                     & \multicolumn{1}{l|}{d}                 & \multicolumn{1}{l|}{0}                 \\ \cline{5-7} 
-\end{tabular}
-\end{table}
 
 \newpage
 \section{Enunciado original}\label{sec:enunciado}
