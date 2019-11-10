@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define CONJUNTOS 32
 #define FIFOINDEX 0
@@ -94,47 +95,73 @@ unsigned int select_oldest(unsigned int setnum) {
 }
 void read_tocache(unsigned int blocknum, unsigned int way, unsigned int set) {
 	for (int i = 0; i < BLOCKSIZE; i++) {
-		cache[set][find_blockIndex(way) + VALIDDIRTYTAG + i] = ram[blocknum * BLOCKSIZE + i];
+		cache[set][find_blockIndex(way) + VALIDDIRTYTAG + i] = ram[blocknum
+				* BLOCKSIZE + i];
 		// memcpy(&cache[set][BASEDATAINDEX+way*(BLOCKSIZE+VALIDDIRTYTAG)+i], &ram[blocknum*BLOCKSIZE+i], sizeof(ram[0]));
 	}
+	/* Valid = 1 */
+	cache[set][find_blockIndex(way)] = 1;
 }
-unsigned int find_blockIndex(unsigned int way){
-	return 1+way*(BLOCKSIZE+VALIDDIRTYTAG);
+unsigned int find_blockIndex(unsigned int way) {
+	return 1 + way * (BLOCKSIZE + VALIDDIRTYTAG);
 }
 unsigned char read_byte(unsigned int address) {
 	accesosMemoria++;
-	bool hit = false;
+	int hit = 0;
 	int via = 0;
-	while (!fin && via < VIAS ) {
-		if(get_tag(address) == cache[find_set(address)][find_blockIndex(via)+2]){
-			hit = true;
+	while (!hit && via < VIAS) {
+		if (get_tag(address) == cache[find_set(address)][find_blockIndex(via) + 2]) {
+			hit = 1;
 			hits++;
 			break;
 		}
 		via++;
 	};
-	if(!hit){
+	if (!hit) {
+		/* Llevo el bloque a Memoria */
 		read_tocache(block_address(address), cache[find_set(address)][0], find_set(address));
+		// Via desde donde se devuelve el Dato.
+		via = cache[find_set(address)][0];
+		// Recalcular FIFO
+		cache[find_set(address)][0] = 1 + cache[find_set(address)][0];
+		// Si llego al final, empiezo de nuevo
+		if (cache[find_set(address)][0] == VIAS) {
+			cache[find_set(address)][0] = 0;
+		}
 		misses++;
 	}
-	return cache[find_set(address)][find_blockIndex(via)+3+get_offset(address)];
+	return cache[find_set(address)][find_blockIndex(via) + 3 + get_offset(address)];
 }
-void write_byte(unsigned int address, unsigned char value){
+void write_byte(unsigned int address, unsigned char value) {
 	accesosMemoria++;
-	bool hit = false;
+	int hit = 0;
 	int via = 0;
-	while (!fin && via < VIAS ) {
-		if(get_tag(address) == cache[find_set(address)][find_blockIndex(via)+2]){
-			hit = true;
+	while (!hit && via < VIAS) {
+		if (get_tag(address) == cache[find_set(address)][find_blockIndex(via) + 2]) {
+			hit = 1;
 			hits++;
 			break;
 		}
 		via++;
 	};
-	if(!hit){
-		// Uso read_tocache
-	}else{
-		// Dirty bit
+	if (!hit) {
+		/* Llevo el bloque a Memoria */
+		read_tocache(block_address(address), cache[find_set(address)][0],find_set(address));
+		// Via desde donde se guarda el Dato.
+		via = cache[find_set(address)][0];
+		/* Dirty bit = 1 */
+		cache[find_set(address)][find_blockIndex(via) + 1] = 1;
+		// Recalcular FIFO
+		cache[find_set(address)][0] = 1 + cache[find_set(address)][0];
+		// Si llego al final, empiezo de nuevo
+		if (cache[find_set(address)][0] == VIAS) {
+			cache[find_set(address)][0] = 0;
+		}
+		misses++;
 	}
-	// Actualizo cache
+	/* Actualizo la cache */
+	cache[find_set(address)][find_blockIndex(via) + 3 + get_offset(address)] = value;
+}
+float get_miss_rate() {
+	return misses / accesosMemoria;
 }
