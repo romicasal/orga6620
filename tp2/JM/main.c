@@ -38,6 +38,7 @@
 #define SET 5
 #define TAG 5
 #define BITS 16
+#define FILENAME "prueba1.mem"
 float missRate = 0;
 float accesosMemoria = 0;
 float misses = 0;
@@ -58,9 +59,66 @@ void write_byte(unsigned int address, unsigned char value);
 float get_miss_rate();
 int main(void) {
 
-	for (int i = 0; i <= 65536; i = i + 4) {
-		printf("i: %d --> %d \n", i, get_tag(i));
-	}
+      /* Open the file for reading */
+
+  char *line_buf = NULL;
+  char bloque1[5];
+  char bloque2[5];
+  size_t line_buf_size = 0;
+  int line_count = 0;
+  ssize_t line_size;
+  FILE *fp = fopen(FILENAME, "r");
+  if (!fp)
+  {
+    fprintf(stderr, "Error opening file '%s'\n", FILENAME);
+    return EXIT_FAILURE;
+  }
+
+  /* Get the first line of the file. */
+  line_size = getline(&line_buf, &line_buf_size, fp);
+
+  /* Loop through until we are done with the file. */
+  while (line_size >= 0)
+  {
+    /* Increment our line count */
+    line_count++;
+
+
+    printf("contents: %c \n", line_buf[0]);
+    switch(line_buf[0]){
+    case 'F':
+        init();
+        break;
+    case 'w':
+        break;
+    case 'R':
+        memcpy(bloque1,&line_buf[2], 5);
+        bloque1[5] = '\0';
+        int i;
+        sscanf(bloque1, "%d", &i);
+        printf("READ: %d \n", i);
+        read_byte(i);
+        break;
+    case 'M':
+        break;
+    default:
+        break;
+    }
+
+    /* Show the line details */
+    //printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count,line_size, line_buf_size, line_buf);
+
+    /* Get the next line */
+    line_size = getline(&line_buf, &line_buf_size, fp);
+  }
+
+  /* Free the allocated line buffer */
+ free(line_buf);
+ line_buf = NULL;
+
+  /* Close the file now that we are done with it */
+  fclose(fp);
+
 	return 0;
 }
 void init() {
@@ -94,13 +152,21 @@ unsigned int select_oldest(unsigned int setnum) {
 	return cache[setnum][FIFOINDEX];
 }
 void read_tocache(unsigned int blocknum, unsigned int way, unsigned int set) {
+    /* Si Dirty bit = 1, escribo en memoria */
+    if(cache[set][find_blockIndex(way) + 1] == 1){
+        write_tomem(blocknum, way, set);
+    }
+    /* llevo el bloque desde RAM hasta cache */
 	for (int i = 0; i < BLOCKSIZE; i++) {
-		cache[set][find_blockIndex(way) + VALIDDIRTYTAG + i] = ram[blocknum
-				* BLOCKSIZE + i];
-		// memcpy(&cache[set][BASEDATAINDEX+way*(BLOCKSIZE+VALIDDIRTYTAG)+i], &ram[blocknum*BLOCKSIZE+i], sizeof(ram[0]));
+		cache[set][find_blockIndex(way) + VALIDDIRTYTAG + i] = ram[blocknum * BLOCKSIZE + i];
 	}
 	/* Valid = 1 */
 	cache[set][find_blockIndex(way)] = 1;
+}
+void write_tomem(unsigned int blocknum, unsigned int way, unsigned int set){
+    for (int i = 0; i < BLOCKSIZE; i++) {
+		ram[blocknum * BLOCKSIZE + i] = cache[set][find_blockIndex(way) + VALIDDIRTYTAG + i];
+	}
 }
 unsigned int find_blockIndex(unsigned int way) {
 	return 1 + way * (BLOCKSIZE + VALIDDIRTYTAG);
@@ -130,8 +196,10 @@ unsigned char read_byte(unsigned int address) {
 		}
 		misses++;
 	}
+	/* Actualizo cache */
 	return cache[find_set(address)][find_blockIndex(via) + 3 + get_offset(address)];
 }
+
 void write_byte(unsigned int address, unsigned char value) {
 	accesosMemoria++;
 	int hit = 0;
@@ -159,7 +227,7 @@ void write_byte(unsigned int address, unsigned char value) {
 		}
 		misses++;
 	}
-	/* Actualizo la cache */
+	/* Actualizo cache */
 	cache[find_set(address)][find_blockIndex(via) + 3 + get_offset(address)] = value;
 }
 float get_miss_rate() {
