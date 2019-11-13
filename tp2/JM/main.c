@@ -31,7 +31,7 @@
 #define SET 5
 #define TAG 5
 #define BITS 16
-#define FILENAME "prueba5.mem"
+#define FILENAME "prueba3b.mem"
 float missRate = 0;
 int accesosMemoria = 0;
 float misses = 0;
