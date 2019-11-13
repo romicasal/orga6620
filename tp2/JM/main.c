@@ -7,7 +7,7 @@
  * Valid = 8x1
  * Dirty bit = 8x1
  * TAG =  8x1
- * Block = 8x1
+ * Nro. de Block = 8x1
  * Datos = 64 * 8 = 512
  * Total = 1 + 8 + 8 + 8 + 8 + 512 = 545
  * |F|...|V|D|T|B|DA|...
@@ -52,9 +52,6 @@ void write_byte(unsigned int address, unsigned char value);
 float get_miss_rate();
 unsigned int block_address(unsigned int address);
 int main(void) {
-
-    // printf("TAG: %d",  block_address(65472));
-    // printf("%d \n",sizeof(char));
 
     char *line_buf = NULL;
     char bloque1[7];
