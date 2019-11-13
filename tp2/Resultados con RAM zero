@@ -1,0 +1,75 @@
+Archivo prueba1.mem
+Resultado: 255 
+Resultado: 48 
+Resultado: 96 
+Resultado: 192 
+Resultado: 84 
+Resultado: 68 
+Resultado: 88 
+Resultado: 80 
+Resultado: 255 
+MR: 55.56% 
+
+Archivo prueba2.mem
+Resultado: 0 
+Resultado: 0 
+Resultado: 10 
+Resultado: 20 
+MR: 33.33% 
+
+Archivo prueba3.mem
+Resultado: 255 
+Resultado: 2 
+Resultado: 3 
+Resultado: 4 
+Resultado: 5 
+Resultado: 0 
+Resultado: 0 
+Resultado: 255 
+Resultado: 2 
+Resultado: 3 
+Resultado: 4 
+Resultado: 5 
+MR: 17.65% 
+
+Archivo prueba3b.mem
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 1 
+Resultado: 2 
+Resultado: 3 
+Resultado: 4 
+MR: 62.50% 
+
+Archivo prueba4.mem
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 1 
+Resultado: 2 
+Resultado: 3 
+Resultado: 4 
+MR: 62.50% 
+
+Archivo prueba5.mem
+Dirección no válida: 131072
+Resultado: 0 
+Dirección o valores no válidos: W 16384,  256
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+Resultado: 0 
+MR: 60.00% 
+
+
