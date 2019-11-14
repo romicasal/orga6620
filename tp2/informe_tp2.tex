@@ -206,33 +206,37 @@ MR: 60.00%
 
 \normalsize
 
-En el programa prueba1.mem observamos que casi todos los misses ocurridos son compulsivos, ya que como partimos de una caché inicializada, los bloques accedidos en la primera parte del programa aún no se encontraban en la caché y están accediendo a distintos conjuntos de la misma.\\
-En el programa prueba2.mem la tasa de misses es también dada por misses compulsivos, pero al acceder a menos direcciones que ya se encuentran en caché con más frecuencia, la tasa de fallos resultó menor.
-En el programa prueba3.mem ocurre algo similar a prueba2.mem, con la diferencia de que no se trata de las mismas direcciones de memoria, pero sí están en el mismo bloque ya cargado en el caché. 
-En el programa prueba4.mem lo que ocurre es que muchos de los accesos se hacen al mismo índice del caché pero como el tag es distinto, caen en distintas vías o no se encuentran y por eso da una alta tasa de fallos.
-En el programa prueba5.mem ocurre algo similar. El tag es distinto, aunque coinciden en índice, así que caen los bloques en vías diferentes del mismo índice. 
 
-\section{Conclusión}
-Lo que podemos observar es que no todos los programas funcionan en forma eficiente para la misma arquitectura de caché que use nuestro hardware, lo que se desprende de los diferentes resultados obtenidos en la salida de los programas interpretados.
-Según los accesos que tenga durante el programa, tener un caché de tantas vías contribuye a reducir la cantidad de misses de conflicto, pero dependerá de cómo se distribuyan los accesos de memoria. \\
 
-\vspace{.5cm}
-%Referencias o recursos utilizados durante la investigación para la resolución del trabajo práctico 
-\begin{thebibliography}{5}
- \bibitem{} Hennessy, John L. and Patterson, David A., Computer Architecture: A Quantitative Approach, Third Edition, 2002.
- \bibitem{} Kernighan, Brian, and Ritchie, Dennis, The C Programming Language.
-\end{thebibliography}
+En el programa prueba1.mem observamos que casi todos los misses ocurridos son compulsivos, ya que como partimos de una caché inicializada, los bloques accedidos en la primera parte del programa aún no se encontraban en la caché y están accediendo a distintos conjuntos de la misma, separados por bloques mayores a 64 bytes.\\
+En el programa prueba2.mem la tasa de misses es también dada por misses compulsivos(2 misses en total) pero al acceder a menos direcciones que ya se encuentran en caché con más frecuencia, la tasa de fallos resultó menor.
+En el programa prueba3.mem ocurre algo similar a prueba2.mem, con la diferencia de que no se trata de las mismas direcciones de memoria, pero sí están en el mismo bloque ya cargado en el caché, es decir se acceden a posiciones contiguas de memoria del primer bloque cargado. Para el caso 3b, si bien se accedes a posiciones contiguas de memoria, los datos no están en el mismo bloque por lo que se produces fallos en mayor número. Prueba4, Idem 3b.
+En el programa prueba5.mem tenemos dos comandos que no se pueden procesar. En el primer caso la dirección de memoria es mayor a la máxima(65535) y en el segundo caso se intenta escribir el valor 256 que es mayor a 8 bits(1 byte).
 
-\clearpage
 
-\part{Apéndice}
-\appendix
-
+\newpage
+\section{Código fuente}
 \normalsize
 \textbf{Repositorio:github.com/romicasal/orga6620/tree/tp1\_delpinor/tp2}
+\subsection{pruebas.sh}
+\begin{lstlisting}
+echo "Pruebas TP2" > test_result.txt
+echo "prueba1.mem" >> test_result.txt
+./tp2 prueba1.mem >> test_result.txt
+echo "" >> test_result.txt
+echo "prueba2.mem" >> test_result.txt
+./tp2 prueba2.mem >> test_result.txt
+echo "" >> test_result.txt
+echo "prueba3.mem" >> test_result.txt
+./tp2 prueba3.mem >> test_result.txt
+echo "" >> test_result.txt
+echo "prueba4.mem" >> test_result.txt
+./tp2 prueba4.mem >> test_result.txt
+echo "" >> test_result.txt
+echo "prueba5.mem" >> test_result.txt
+./tp2 prueba5.mem >> test_result.txt
 
-\section{Código fuente}\label{sec:codigofuente}
-
+\end{lstlisting}
 \subsection{main.c}
 \begin{lstlisting}
 /*
@@ -248,7 +252,7 @@ Según los accesos que tenga durante el programa, tener un caché de tantas vía
  * Datos = 64 * 8 = 512
  * Total = 1 + 8 + 8 + 8 + 8 + 512 = 545
  * |F|...|V|D|T|B|DA|...
- * |1|...|1|1|1|1|64|... |1|1|1|64|....
+ * |1|...|1|1|1|1|64|... |1|1|1|1|64|....
  *  */
 
 #include <stdio.h>
@@ -336,7 +340,7 @@ int main(void) {
             int v;
             sscanf(bloque2, "%d", &v );
             if(w >= MMSIZE || v > 255)
-                printf("Dirección o valores no válidos: W %s \n", bloque1);
+                printf("Direccion o valores no validos: W %s \n", bloque1);
             else
                 write_byte(w,v);
             break;
@@ -346,7 +350,7 @@ int main(void) {
             sscanf(bloque1, "%d", &r);
 
             if(r > MMSIZE)
-                printf("Dirección no válida: %d\n", r);
+                printf("Direccion no valida: %d\n", r);
             else
                 printf("Resultado: %d \n",read_byte(r));
             break;
@@ -525,12 +529,22 @@ float get_miss_rate() {
     return misses / accesosMemoria;
 }
 \end{lstlisting}
+\section{Conclusión}
+Lo que podemos observar es que no todos los programas funcionan en forma eficiente para la misma arquitectura de caché que use nuestro hardware, lo que se desprende de los diferentes resultados obtenidos en la salida de los programas interpretados.
+Según los accesos que tenga durante el programa, tener un caché de tantas vías contribuye a reducir la cantidad de misses de conflicto, pero dependerá de cómo se distribuyan los accesos de memoria. \\
+En la mayoría de casos en los que se obtuvo una tasa de MR menor es porque se aprovecha el principio de localidad espacial y temporal, es decir, cuando se acceden a posiciones de memoria contiguas o que se hayan accedido antes.
+\vspace{.5cm}
+%Referencias o recursos utilizados durante la investigación para la resolución del trabajo práctico 
+\begin{thebibliography}{5}
+ \bibitem{} Hennessy, John L. and Patterson, David A., Computer Architecture: A Quantitative Approach, Third Edition, 2002.
+ \bibitem{} Kernighan, Brian, and Ritchie, Dennis, The C Programming Language.
+\end{thebibliography}
+
+\clearpage
 
 
 
-
-\newpage
-\section{Enunciado original}\label{sec:enunciado}
 \includepdf[pages={-}]{tp2-q2-2019.pdf}
+
 
 \end{document}
