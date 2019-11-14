@@ -51,7 +51,7 @@ unsigned char read_byte(unsigned int address);
 void write_byte(unsigned int address, unsigned char value);
 float get_miss_rate();
 unsigned int block_address(unsigned int address);
-int main(void) {
+int main(int argc, char **argv) {
 
     char *line_buf = NULL;
     char bloque1[7];
@@ -59,9 +59,15 @@ int main(void) {
     size_t line_buf_size = 0;
     int line_count = 0;
     ssize_t line_size;
-    FILE *fp = fopen(FILENAME, "r");
+
+    if (!(argc > 1)) {
+      fprintf(stderr, "Program filename argument missing\n");
+      return EXIT_FAILURE;
+    }
+
+    FILE *fp = fopen(argv[1], "r");
     if (!fp) {
-        fprintf(stderr, "Error opening file '%s'\n", FILENAME);
+        fprintf(stderr, "Error opening file '%s'\n", argv[1]);
         return EXIT_FAILURE;
     }
 
